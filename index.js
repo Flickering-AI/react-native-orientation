@@ -4,6 +4,7 @@ var DeviceEventEmitter = require('react-native').DeviceEventEmitter;
 var listeners = {};
 var orientationDidChangeEvent = 'orientationDidChange';
 var specificOrientationDidChangeEvent = 'specificOrientationDidChange';
+var uiOrientationDidChangeEvent = 'uiOrientationDidChange';
 
 var id = 0;
 var META = '__listener_id';
@@ -84,6 +85,26 @@ module.exports = {
   },
 
   removeSpecificOrientationListener(cb) {
+    var key = getKey(cb);
+
+    if (!listeners[key]) {
+      return;
+    }
+
+    listeners[key].remove();
+    listeners[key] = null;
+  },
+
+  addUiOrientationListener(cb) {
+    var key = getKey(cb);
+
+    listeners[key] = DeviceEventEmitter.addListener(uiOrientationDidChangeEvent,
+      (body) => {
+        cb(body.uiOrientation);
+      });
+  },
+
+  removeUiOrientationListener(cb) {
     var key = getKey(cb);
 
     if (!listeners[key]) {

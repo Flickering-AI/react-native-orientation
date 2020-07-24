@@ -24,6 +24,7 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
 {
   if ((self = [super init])) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceStatusBarOrientationDidChange:) name:@"UIApplicationDidChangeStatusBarFrameNotification" object:nil];
   }
   return self;
 
@@ -47,6 +48,15 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
 
   [self.bridge.eventDispatcher sendDeviceEventWithName:@"orientationDidChange"
                                               body:@{@"orientation": [self getOrientationStr:orientation]}];
+
+}
+
+- (void)deviceStatusBarOrientationDidChange:(NSNotification *)notification
+{
+    UIInterfaceOrientation statusBarOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    [self.bridge.eventDispatcher sendDeviceEventWithName:@"uiOrientationDidChange"
+                                                body:@{@"uiOrientation": [self getStatusBarOrientationStr:statusBarOrientation]}];
 
 }
 
@@ -86,6 +96,30 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
           orientationStr = @"UNKNOWN";
           break;
       }
+      break;
+  }
+  return orientationStr;
+}
+
+- (NSString *)getStatusBarOrientationStr: (UIInterfaceOrientation)orientation {
+  NSString *orientationStr;
+  // orientation is unknown, we try to get the status bar orientation
+  switch (orientation) {
+    case UIInterfaceOrientationPortrait:
+      orientationStr = @"PORTRAIT";
+      break;
+    case UIInterfaceOrientationLandscapeLeft:
+    case UIInterfaceOrientationLandscapeRight:
+
+      orientationStr = @"LANDSCAPE";
+      break;
+
+    case UIInterfaceOrientationPortraitUpsideDown:
+      orientationStr = @"PORTRAITUPSIDEDOWN";
+      break;
+
+    default:
+      orientationStr = @"UNKNOWN";
       break;
   }
   return orientationStr;
