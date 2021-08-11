@@ -59,10 +59,12 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
 
     @ReactMethod
     public void getOrientation(Callback callback) {
-        final int orientationInt = getReactApplicationContext().getResources().getConfiguration().orientation;
-
+        final Activity activity = getCurrentActivity();
+        int orientationInt = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        if (activity != null) {
+            orientationInt = activity.getRequestedOrientation();
+        }
         String orientation = this.getOrientationString(orientationInt);
-
         if (orientation == "null") {
             callback.invoke(orientationInt, null);
         } else {
@@ -118,8 +120,11 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
     @Override
     public @Nullable Map<String, Object> getConstants() {
         HashMap<String, Object> constants = new HashMap<String, Object>();
-        int orientationInt = getReactApplicationContext().getResources().getConfiguration().orientation;
-
+        final Activity activity = getCurrentActivity();
+        int orientationInt = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        if (activity != null) {
+            orientationInt = activity.getRequestedOrientation();
+        }
         String orientation = this.getOrientationString(orientationInt);
         if (orientation == "null") {
             constants.put("initialOrientation", null);
@@ -131,11 +136,11 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
     }
 
     private String getOrientationString(int orientation) {
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || orientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE || orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
             return "LANDSCAPE";
-        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+        } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
             return "PORTRAIT";
-        } else if (orientation == Configuration.ORIENTATION_UNDEFINED) {
+        } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
             return "UNKNOWN";
         } else {
             return "null";
