@@ -180,75 +180,84 @@ RCT_EXPORT_METHOD(getOrientation:(RCTResponseSenderBlock)callback)
 
 RCT_EXPORT_METHOD(getSpecificOrientation:(RCTResponseSenderBlock)callback)
 {
-  UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-  NSString *orientationStr = [self getSpecificOrientationStr:orientation];
-  callback(@[[NSNull null], orientationStr]);
+  dispatch_async(dispatch_get_main_queue(), ^{
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    NSString *orientationStr = [self getSpecificOrientationStr:orientation];
+    callback(@[[NSNull null], orientationStr]);
+  });
 }
 
 RCT_EXPORT_METHOD(lockToPortrait)
 {
-  #if DEBUG
-    NSLog(@"Locked to Portrait");
-  #endif
-  [Orientation setOrientation:UIInterfaceOrientationMaskPortrait];
-  [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-    [UIViewController attemptRotationToDeviceOrientation];
-  }];
-
+  dispatch_async(dispatch_get_main_queue(), ^{
+    #if DEBUG
+      NSLog(@"Locked to Portrait");
+    #endif
+    [Orientation setOrientation:UIInterfaceOrientationMaskPortrait];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+      [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+      [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
+      [UIViewController attemptRotationToDeviceOrientation];
+    }];
+  });
 }
 
 RCT_EXPORT_METHOD(lockToLandscape)
 {
-  #if DEBUG
-    NSLog(@"Locked to Landscape");
-  #endif
-  UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-  NSString *orientationStr = [self getSpecificOrientationStr:orientation];
-  if ([orientationStr isEqualToString:@"LANDSCAPE-LEFT"]) {
-    [Orientation setOrientation:UIInterfaceOrientationMaskLandscape];
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-      [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-      [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
-      [UIViewController attemptRotationToDeviceOrientation];
-    }];
-  } else {
-    [Orientation setOrientation:UIInterfaceOrientationMaskLandscape];
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-      [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-      [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeLeft] forKey:@"orientation"];
-      [UIViewController attemptRotationToDeviceOrientation];
-    }];
-  }
+  dispatch_async(dispatch_get_main_queue(), ^{
+    #if DEBUG
+      NSLog(@"Locked to Landscape");
+    #endif
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    NSString *orientationStr = [self getSpecificOrientationStr:orientation];
+    if ([orientationStr isEqualToString:@"LANDSCAPE-LEFT"]) {
+      [Orientation setOrientation:UIInterfaceOrientationMaskLandscape];
+      [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
+        [UIViewController attemptRotationToDeviceOrientation];
+      }];
+    } else {
+      [Orientation setOrientation:UIInterfaceOrientationMaskLandscape];
+      [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeLeft] forKey:@"orientation"];
+        [UIViewController attemptRotationToDeviceOrientation];
+      }];
+    }
+  });
 }
 
 RCT_EXPORT_METHOD(lockToLandscapeLeft)
 {
-  #if DEBUG
-    NSLog(@"Locked to Landscape Left");
-  #endif
-    [Orientation setOrientation:UIInterfaceOrientationMaskLandscapeLeft];
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeLeft] forKey:@"orientation"];
-        [UIViewController attemptRotationToDeviceOrientation];
-    }];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    #if DEBUG
+      NSLog(@"Locked to Landscape Left");
+    #endif
+      [Orientation setOrientation:UIInterfaceOrientationMaskLandscapeLeft];
+      [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+          [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+          [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeLeft] forKey:@"orientation"];
+          [UIViewController attemptRotationToDeviceOrientation];
+      }];
+  });
 
 }
 
 RCT_EXPORT_METHOD(lockToLandscapeRight)
 {
-  #if DEBUG
-    NSLog(@"Locked to Landscape Right");
-  #endif
-  [Orientation setOrientation:UIInterfaceOrientationMaskLandscapeRight];
-  [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-    // this seems counter intuitive
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
-    [UIViewController attemptRotationToDeviceOrientation];
-  }];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    #if DEBUG
+      NSLog(@"Locked to Landscape Right");
+    #endif
+    [Orientation setOrientation:UIInterfaceOrientationMaskLandscapeRight];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+      // this seems counter intuitive
+      [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+      [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
+      [UIViewController attemptRotationToDeviceOrientation];
+    }];
+  });
 
 }
 
