@@ -6,7 +6,7 @@
 #if __has_include(<React/RCTEventDispatcher.h>)
 #import <React/RCTEventDispatcher.h>
 #else
-#import "RCTEventDispatcher.h"
+#import <React/RCTEventDispatcher.h>
 #endif
 
 @implementation Orientation
@@ -67,9 +67,10 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
       orientationStr = @"PORTRAIT";
       break;
     case UIDeviceOrientationLandscapeLeft:
+      orientationStr = @"LANDSCAPE_LEFT";
+      break;
     case UIDeviceOrientationLandscapeRight:
-
-      orientationStr = @"LANDSCAPE";
+      orientationStr = @"LANDSCAPE_RIGHT";
       break;
 
     case UIDeviceOrientationPortraitUpsideDown:
@@ -83,9 +84,10 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
           orientationStr = @"PORTRAIT";
           break;
         case UIInterfaceOrientationLandscapeLeft:
+          orientationStr = @"LANDSCAPE_LEFT";
+          break;
         case UIInterfaceOrientationLandscapeRight:
-
-          orientationStr = @"LANDSCAPE";
+          orientationStr = @"LANDSCAPE_RIGHT";
           break;
 
         case UIInterfaceOrientationPortraitUpsideDown:
@@ -283,3 +285,4 @@ RCT_EXPORT_METHOD(unlockAllOrientations)
 }
 
 @end
+
